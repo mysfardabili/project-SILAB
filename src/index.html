@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SILAB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .card-shadow {
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .nav-underline {
+            border-bottom: 3px solid #3B82F6;
+        }
+        .silab-blue {
+            color: #1E40AF;
+        }
+        .course-illustration {
+            background: linear-gradient(135deg, #DBEAFE 0%, #93C5FD 100%);
+        }
+        .person-illustration {
+            width: 32px;
+            height: 32px;
+            background: #F97316;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 6px;
+            right: 6px;
+        }
+        .cloud-shape {
+            background: #3B82F6;
+            width: 50px;
+            height: 30px;
+            border-radius: 15px;
+            position: relative;
+        }
+        .cloud-shape:before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 8px;
+            width: 16px;
+            height: 16px;
+            background: #3B82F6;
+            border-radius: 50%;
+        }
+        .cloud-shape:after {
+            content: '';
+            position: absolute;
+            top: -12px;
+            right: 12px;
+            width: 20px;
+            height: 20px;
+            background: #3B82F6;
+            border-radius: 50%;
+        }
+        .material-card {
+            transition: all 0.2s ease;
+        }
+        .material-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Left Section: Logo -->
+                <div>
+                    <h1 class="text-3xl font-bold silab-blue">SILAB</h1>
+                </div>
+                
+                <!-- Right Section: User Profile -->
+                <div class="flex items-center space-x-5">
+                    <button class="text-gray-400 hover:text-gray-600">
+                        <i class="far fa-comment-dots text-xl"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-gray-600">
+                        <i class="far fa-bell text-xl"></i>
+                    </button>
+                    <div class="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 rounded-lg px-2 py-1">
+                        <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+                            JD
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm font-semibold text-gray-900">John Doe</div>
+                            <div class="text-xs text-gray-500">Backend Developer</div>
+                        </div>
+                        <i class="fas fa-chevron-down text-gray-400 text-sm"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Navigation Bar - Below Logo -->
+            <nav class="mt-6 -mb-px">
+                <div class="flex space-x-8">
+                    <a href="#" class="text-gray-500 hover:text-blue-600 pb-3 text-base border-b-3 border-transparent">Home</a>
+                    <a href="#" class="text-blue-600 pb-3 text-base font-medium nav-underline">My Learning</a>
+                    <a href="#" class="text-gray-500 hover:text-blue-600 pb-3 text-base border-b-3 border-transparent">Catalog</a>
+                    <a href="#" class="text-gray-500 hover:text-blue-600 pb-3 text-base border-b-3 border-transparent">Roadmap</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        <!-- Continue Learning Section -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Continue Learning</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Course Card 1 -->
+                <div class="bg-white rounded-lg p-6 card-shadow">
+                    <div class="flex space-x-4">
+                        <div class="w-20 h-20 course-illustration rounded-lg flex items-center justify-center relative flex-shrink-0">
+                            <div class="cloud-shape"></div>
+                            <div class="person-illustration flex items-center justify-center">
+                                <i class="fas fa-user text-white text-xs"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <i class="fas fa-book text-gray-400 text-sm"></i>
+                                <span class="text-gray-500 text-sm">Course</span>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-3 leading-snug">
+                                Creating Engaging Learning Journeys: UI/UX Best Practices
+                            </h3>
+                            <div class="mb-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm text-gray-600">Progress: 80%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-gray-800 h-2 rounded-full" style="width: 80%"></div>
+                                </div>
+                            </div>
+                            <button class="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
+                                Continue Learning
+                                <i class="fas fa-chevron-right ml-2 text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course Card 2 -->
+                <div class="bg-white rounded-lg p-6 card-shadow">
+                    <div class="flex space-x-4">
+                        <div class="w-20 h-20 course-illustration rounded-lg flex items-center justify-center relative flex-shrink-0">
+                            <div class="cloud-shape"></div>
+                            <div class="person-illustration flex items-center justify-center">
+                                <i class="fas fa-user text-white text-xs"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <i class="fas fa-book text-gray-400 text-sm"></i>
+                                <span class="text-gray-500 text-sm">Course</span>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-3 leading-snug">
+                                Creating Engaging Learning Journeys: UI/UX Best Practices
+                            </h3>
+                            <div class="mb-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm text-gray-600">Progress: 80%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-gray-800 h-2 rounded-full" style="width: 80%"></div>
+                                </div>
+                            </div>
+                            <button class="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
+                                Continue Learning
+                                <i class="fas fa-chevron-right ml-2 text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- All Materials Section -->
+        <section>
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">All Materials</h2>
+            
+            <!-- Filter Tabs and Controls -->
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex space-x-1">
+                    <button class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg">
+                        All Status
+                    </button>
+                    <button class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg">
+                        Not Started
+                    </button>
+                    <button class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg">
+                        In Progress
+                    </button>
+                    <button class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg">
+                        Complete
+                    </button>
+                </div>
+                
+                <div class="flex items-center space-x-3">
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            placeholder="Search materials" 
+                            class="pl-10 pr-4 py-2 w-64 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                        >
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400 text-sm"></i>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <button class="flex items-center space-x-2 px-3 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50">
+                            <i class="fas fa-sort text-gray-400 text-sm"></i>
+                            <span>Sort By</span>
+                            <i class="fas fa-chevron-down text-gray-400 text-xs"></i>
+                        </button>
+                        <button class="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                            <i class="fas fa-th text-sm"></i>
+                        </button>
+                        <button class="p-2 text-gray-400 hover:text-gray-600 border border-gray-300 rounded-lg">
+                            <i class="fas fa-list text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Materials Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Quiz Card -->
+                <div class="bg-white rounded-lg overflow-hidden card-shadow material-card">
+                    <div class="h-32 bg-gradient-to-br from-yellow-100 via-yellow-200 to-yellow-300 relative p-3">
+                        <div class="absolute top-3 left-3">
+                            <span class="bg-yellow-800 text-white text-xs px-2 py-1 rounded-full font-medium flex items-center">
+                                20 Question 
+                                <i class="fas fa-check ml-1 text-xs"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center space-x-2 mb-2">
+                            <div class="w-5 h-5 bg-orange-500 rounded flex items-center justify-center">
+                                <i class="fas fa-question text-white text-xs"></i>
+                            </div>
+                            <span class="text-orange-500 text-sm font-medium">Quiz</span>
+                        </div>
+                        <h3 class="font-semibold text-gray-900 text-sm leading-tight">
+                            5 Steps Optimizing User Experience
+                        </h3>
+                    </div>
+                </div>
+
+                <!-- Page Card -->
+                <div class="bg-white rounded-lg overflow-hidden card-shadow material-card">
+                    <div class="h-32 bg-gradient-to-br from-emerald-100 via-teal-200 to-teal-300 relative p-3">
+                        <div class="absolute top-3 left-3">
+                            <span class="bg-teal-800 text-white text-xs px-2 py-1 rounded-full font-medium">
+                                12 Chapters
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-5 h-5 bg-teal-500 rounded flex items-center justify-center">
+                                    <i class="fas fa-file-alt text-white text-xs"></i>
+                                </div>
+                                <span class="text-teal-600 text-sm font-medium">Page</span>
+                            </div>
+                            <div class="w-4 h-4 bg-blue-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-check text-white text-xs"></i>
+                            </div>
+                        </div>
+                        <h3 class="font-semibold text-gray-900 text-sm leading-tight">
+                            Heuristics: 10 Usability Principles To improve UI...
+                        </h3>
+                    </div>
+                </div>
+
+                <!-- Learning Path Card -->
+                <div class="bg-white rounded-lg overflow-hidden card-shadow material-card">
+                    <div class="h-32 bg-gradient-to-br from-purple-100 via-purple-200 to-purple-300 relative p-3">
+                        <div class="absolute top-3 left-3">
+                            <span class="bg-purple-800 text-white text-xs px-2 py-1 rounded-full font-medium">
+                                20 Path
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center space-x-2 mb-2">
+                            <div class="w-5 h-5 bg-purple-500 rounded flex items-center justify-center">
+                                <i class="fas fa-map-marked-alt text-white text-xs"></i>
+                            </div>
+                            <span class="text-purple-600 text-sm font-medium">Learning Path</span>
+                        </div>
+                        <h3 class="font-semibold text-gray-900 text-sm leading-tight">
+                            General Knowledge & Methodology - Layout &...
+                        </h3>
+                    </div>
+                </div>
+
+                <!-- Course Card -->
+                <div class="bg-white rounded-lg overflow-hidden card-shadow material-card">
+                    <div class="h-32 bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 relative p-3">
+                        <div class="absolute top-3 left-3">
+                            <span class="bg-blue-800 text-white text-xs px-2 py-1 rounded-full font-medium">
+                                12 Materials
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center space-x-2 mb-2">
+                            <div class="w-5 h-5 bg-blue-500 rounded flex items-center justify-center">
+                                <i class="fas fa-layer-group text-white text-xs"></i>
+                            </div>
+                            <span class="text-blue-600 text-sm font-medium">Course</span>
+                        </div>
+                        <h3 class="font-semibold text-gray-900 text-sm leading-tight">
+                            Mastering UI Design for Impactful Solutions
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Tab switching functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.flex.space-x-1 button');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('text-white', 'bg-blue-600');
+                        btn.classList.add('text-gray-600', 'hover:text-gray-900', 'hover:bg-gray-100');
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.remove('text-gray-600', 'hover:text-gray-900', 'hover:bg-gray-100');
+                    this.classList.add('text-white', 'bg-blue-600');
+                });
+            });
+
+            // Search functionality
+            const searchInput = document.querySelector('input[placeholder="Search materials"]');
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const cards = document.querySelectorAll('.material-card');
+                
+                cards.forEach(card => {
+                    const title = card.querySelector('h3').textContent.toLowerCase();
+                    if (title.includes(searchTerm)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+
+            // Navigation hover effects
+            const navLinks = document.querySelectorAll('nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('mouseenter', function() {
+                    if (!this.classList.contains('nav-underline')) {
+                        this.classList.add('border-blue-300');
+                    }
+                });
+                link.addEventListener('mouseleave', function() {
+                    if (!this.classList.contains('nav-underline')) {
+                        this.classList.remove('border-blue-300');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
