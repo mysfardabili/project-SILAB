@@ -15,7 +15,7 @@ export default function Page() {
                     <h1 className="font-bold text-2xl md:text-3xl text-gray-900">Good morning, Adolf</h1>
                     <span className="text-sm text-gray-600">Welcome to SI Lab, check your priority learning.</span>
                 </div>
-                {/* <div className="flex flex-wrap items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                     <div className="flex items-center gap-2 border rounded-md p-2 bg-gray-50">
                         <Clock className="w-5 h-5 text-purple-500" />
                         <div className="flex flex-col pe-2">
@@ -37,7 +37,7 @@ export default function Page() {
                             <span className="text-xs text-gray-500">Projects</span>
                         </div>
                     </div>
-                </div> */}
+                </div>
             </div>
 
             {/* Announcement Section */}
@@ -54,7 +54,7 @@ export default function Page() {
                             In progress learning content <AlertCircle className="h-4 w-4 text-indigo-500" />
                         </h2>
                         <Link
-                            href=""
+                            href="/dashboard/learnings"
                             className="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors duration-200"
                         >
                             View all <ChevronRight className="ml-1 h-4 w-4" />
@@ -64,11 +64,11 @@ export default function Page() {
                         activities={[
                             {
                                 title: "Web technology : Module 1 - Introduction",
-                                link: "/courses/web-tech/module-1",
+                                link: "/learnings/web-tech-1/overview",
                             },
                             {
                                 title: "Data Structures : Module 2 - Linked Lists",
-                                link: "/courses/data-structures/module-2",
+                                link: "/learnings/data-structures-2/overview",
                             },
                         ]}
                     />

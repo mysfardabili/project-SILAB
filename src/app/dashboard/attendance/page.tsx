@@ -1,6 +1,5 @@
 "use client";
 
-<<<<<<< HEAD
 import {
   Calendar,
   ChevronRight,
@@ -158,24 +157,6 @@ const getStatusText = (status: AttendanceStatus) => {
 };
 
 const AttendancePage = ({ data = attendanceData }: { data?: AttendanceData }) => {
-=======
-import { Calendar } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
-import { AttendanceData } from "@/lib/types/attendance";
-import { attendanceData } from "@/lib/data/attendance-mock";
-// Import components directly (alternative to index.ts)
-import { AttendanceSummary } from "./components/AttendanceSummary";
-import { RecentAttendance } from "./components/RecentAttendance";
-import { UpcomingClasses } from "./components/UpcomingClasses";
-import { CourseStats } from "./components/CourseStats";
-import { AttendanceFooter } from "./components/AttendanceFooter";
-
-interface AttendancePageProps {
-  data?: AttendanceData;
-}
-
-const AttendancePage = ({ data = attendanceData }: AttendancePageProps) => {
->>>>>>> 1f8a131 (first commit)
   const safeData = {
     summary: data?.summary || {
       present: 0,
@@ -193,14 +174,11 @@ const AttendancePage = ({ data = attendanceData }: AttendancePageProps) => {
     coursesAttendance: data?.coursesAttendance || {},
   };
 
-<<<<<<< HEAD
   const hasRecentAttendance = safeData.recentAttendance.length > 0;
   const hasUpcomingClasses = safeData.upcomingClasses.length > 0;
   const hasCoursesAttendance =
     Object.keys(safeData.coursesAttendance).length > 0;
 
-=======
->>>>>>> 1f8a131 (first commit)
   return (
     <div className="mt-6 rounded-lg bg-white shadow-md overflow-hidden h-full py-6 px-6 md:py-8 md:px-12 lg:px-24 xl:px-24 space-y-6 md:space-y-8">
       <div className="px-6 py-4">
@@ -211,7 +189,6 @@ const AttendancePage = ({ data = attendanceData }: AttendancePageProps) => {
           </h3>
         </div>
       </div>
-<<<<<<< HEAD
       <Separator className="my-2" />
       <div className="px-6 py-4 space-y-5">
         {/* Summary */}
@@ -406,26 +383,6 @@ const AttendancePage = ({ data = attendanceData }: AttendancePageProps) => {
             View full history <ChevronRight className="ml-1 h-4 w-4" />
           </Link>
         </div>
-=======
-
-      <Separator className="my-2" />
-
-      <div className="px-6 py-4 space-y-5">
-        {/* Summary */}
-        <AttendanceSummary summary={safeData.summary} />
-
-        {/* Recent Attendance */}
-        <RecentAttendance records={safeData.recentAttendance} />
-
-        {/* Upcoming Classes */}
-        <UpcomingClasses classes={safeData.upcomingClasses} />
-
-        {/* Course Attendance Stats */}
-        <CourseStats coursesAttendance={safeData.coursesAttendance} />
-
-        {/* Footer Links */}
-        <AttendanceFooter />
->>>>>>> 1f8a131 (first commit)
       </div>
     </div>
   );

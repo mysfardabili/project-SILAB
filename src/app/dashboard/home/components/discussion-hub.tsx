@@ -84,7 +84,7 @@ const DiscussionHub = ({ data = discussionData }) => {
                             {safeData.recentPosts.map((post) => (
                                 <div key={post.id} className="bg-gray-50 rounded-md border-l-4 border-indigo-400 py-2 px-3">
                                     <Link
-                                        href={`/discussions/${post.id}`}
+                                        href={`/dashboard/home/discussions/${post.id}`}
                                         className="text-sm font-medium text-gray-700 hover:text-indigo-700 transition-colors duration-200"
                                     >
                                         {post.title}
@@ -133,7 +133,7 @@ const DiscussionHub = ({ data = discussionData }) => {
                             {safeData.unansweredQuestions.map((question) => (
                                 <div key={question.id} className="bg-gray-50 rounded-md border-l-4 border-amber-400 py-2 px-3">
                                     <Link
-                                        href={`/discussions/${question.id}`}
+                                        href={`/dashboard/home/discussions/${question.id}`}
                                         className="text-sm font-medium text-gray-700 hover:text-indigo-700 transition-colors duration-200"
                                     >
                                         {question.title}
@@ -173,7 +173,7 @@ const DiscussionHub = ({ data = discussionData }) => {
                             {Object.entries(safeData.courseDiscussions).map(([course, count]) => (
                                 <Link
                                     key={course}
-                                    href={`/discussions/course/${course.toLowerCase().replace(' ', '-')}`}
+                                    href={`/dashboard/home/discussions/course/${course.toLowerCase().replace(' ', '-')}`}
                                     className="inline-flex items-center gap-1 py-1 px-3 bg-white rounded-full text-xs font-medium text-indigo-600 border border-indigo-100 hover:bg-indigo-100 transition-colors duration-200"
                                 >
                                     {course} <span className="bg-indigo-100 text-indigo-800 rounded-full px-1.5">{count}</span>
@@ -190,13 +190,13 @@ const DiscussionHub = ({ data = discussionData }) => {
 
                 <div className="flex justify-between pt-2">
                     <Link
-                        href="/discussions/new"
+                        href="/dashboard/home/discussions/new"
                         className="inline-flex items-center text-sm font-medium text-green-600 hover:text-green-800 transition-colors duration-200"
                     >
                         Ask a question <ChevronRight className="ml-1 h-4 w-4" />
                     </Link>
                     <Link
-                        href="/discussions"
+                        href="/dashboard/home/discussions"
                         className="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors duration-200"
                     >
                         All discussions <ChevronRight className="ml-1 h-4 w-4" />

@@ -17,7 +17,7 @@ function CustomNode({ data }: NodeProps<RoadmapNode>) {
   return (
     <div className={cn(
       "w-48 text-center p-3 rounded-lg border-2 shadow-md font-sans", // Menambahkan font-sans
-      STATUS_CONFIG[data.status].node
+      STATUS_CONFIG[data.status as RoadmapNode['status']].node
     )}>
       {/* Handle adalah titik koneksi untuk garis (edges). React Flow menggunakannya secara internal. */}
       <Handle type="target" position={Position.Top} className="!bg-gray-400 !w-2 !h-2" />

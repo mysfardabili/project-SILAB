@@ -1,17 +1,5 @@
 import React from 'react'
-<<<<<<< HEAD
 import { BookOpen, BookText, ClipboardList, Slash, ArrowRight, Users, ChevronRight, Clock, Star, Languages, BadgeCheck, Calendar, Award, BookmarkPlus, Share2 } from "lucide-react"
-=======
-import { ChevronRight } from "lucide-react"
-import ProgressBarSection from "./overview/ProgressBarSection";
-import CourseOverviewSection from "./overview/CourseOverviewSection";
-import WhatYouWillLearnSection from "./overview/WhatYouWillLearnSection";
-import OverviewHeader from './overview/OverviewHeader';
-import CourseSummarySidebar from "./overview/CourseSummarySidebar"
-import InstructorsSection from "./overview/InstructorsSection"
-import RelatedCoursesSection from "./overview/RelatedCoursesSection"
-import CourseContentSection from "./overview/CourseContentSection" 
->>>>>>> 1f8a131 (first commit)
 
 import {
     Breadcrumb,
@@ -20,7 +8,6 @@ import {
     BreadcrumbList,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-<<<<<<< HEAD
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Progress } from "@/components/ui/progress"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -67,10 +54,6 @@ const instructors = [
 ]
 
 const MaterialOverviewPage: React.FC<MaterialOverviewProps> = async ({ params }) => {
-=======
-
-const MaterialOverviewPage: React.FC<{ params: { materialId: string } }> = async ({ params }) => {
->>>>>>> 1f8a131 (first commit)
     const { materialId } = params
 
     return (
@@ -89,7 +72,6 @@ const MaterialOverviewPage: React.FC<{ params: { materialId: string } }> = async
                 </BreadcrumbList>
             </Breadcrumb>
 
-<<<<<<< HEAD
             {/* Hero Section with Gradient Background */}
             <div className='rounded-2xl bg-gradient-to-r from-indigo-600 to-blue-500 p-8 shadow-lg'>
                 <div className='flex flex-col lg:flex-row justify-between gap-8 items-center'>
@@ -341,35 +323,12 @@ const MaterialOverviewPage: React.FC<{ params: { materialId: string } }> = async
                             />
                         </div>
                     </div>
-=======
-            {/* Hero Section */}
-            <OverviewHeader />
-
-            {/* Progress Bar */}
-            <ProgressBarSection />
-
-            {/* Main Content and Sidebar */}
-            <div className='grid grid-cols-1 gap-8 lg:grid-cols-3'>
-                {/* Main Content */}
-                <div className="lg:col-span-2 space-y-8">
-                    <CourseOverviewSection />
-                    <WhatYouWillLearnSection />
-                    <CourseContentSection /> 
-                    <InstructorsSection />
-                </div>
-
-                {/* Sidebar */}
-                <div className="lg:col-span-1 space-y-6">
-                    <CourseSummarySidebar />
-                    <RelatedCoursesSection />
->>>>>>> 1f8a131 (first commit)
                 </div>
             </div>
         </div>
     )
 }
 
-<<<<<<< HEAD
 // Helper Components
 const CheckIcon = ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -397,6 +356,3 @@ const RelatedCourseCard = ({ title, level, duration, image }) => (
 )
 
 export default MaterialOverviewPage
-=======
-export default MaterialOverviewPage
->>>>>>> 1f8a131 (first commit)

@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { extractInitials } from "@/lib/stringUtils";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import {
     Popover,
@@ -22,6 +22,7 @@ import {
 
 export default function Navbar() {
     const pathname = usePathname();
+    const router = useRouter();
     const [userInitials, setUserInitials] = useState("");
 
     // Dummy user data
@@ -40,6 +41,11 @@ export default function Navbar() {
         { label: "Catalog", href: "/dashboard/catalogs" },
         { label: "Roadmap", href: "/dashboard/roadmaps" },
     ];
+
+    const handleLogout = () => {
+        // Add logout logic here (clear session, cookies, etc.)
+        router.push("/login");
+    };
 
     return (
         <nav className="w-full border-b bg-white">
@@ -65,7 +71,6 @@ export default function Navbar() {
                         <PopoverContent className="mt-4">Notification will goes here later Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, enim.</PopoverContent>
                     </Popover>
 
-
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <div className="flex items-center gap-3 cursor-pointer">
@@ -85,11 +90,21 @@ export default function Navbar() {
                         </DropdownMenuTrigger>
 
                         <DropdownMenuContent align="end" className="w-48 mt-2">
-                            <DropdownMenuItem>Profile</DropdownMenuItem>
-                            <DropdownMenuItem>Settings</DropdownMenuItem>
-                            <DropdownMenuItem>Check-in Attendance</DropdownMenuItem>
-                            <DropdownMenuItem>Attendance</DropdownMenuItem>
-                            <DropdownMenuItem>Logout</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => router.push("/dashboard/home/profile")}>
+                                Profile
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => router.push("/dashboard/home/settings")}>
+                                Settings
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => router.push("/dashboard/course-attendance")}>
+                                Check-in Attendance
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => router.push("/dashboard/attendance")}>
+                                Attendance
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={handleLogout}>
+                                Logout
+                            </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

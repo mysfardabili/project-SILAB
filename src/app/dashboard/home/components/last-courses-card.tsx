@@ -90,7 +90,7 @@ const LastCoursesCard = ({
                     </div>
                     <div className="flex items-center justify-between">
                         <Link
-                            href={`/courses/${id}`}
+                            href={`/dashboard/learnings/courses/${id}`}
                             className="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors duration-200"
                         >
                             Continue Learning <ChevronRight className="ml-1 h-4 w-4" />

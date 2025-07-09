@@ -1,4 +1,8 @@
+"use client"
+
 import { GalleryVerticalEnd } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -10,9 +14,24 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setIsLoading(true)
+    
+    // Simulate login process
+    // Nanti bisa diganti dengan actual authentication logic
+    setTimeout(() => {
+      setIsLoading(false)
+      router.push("/dashboard") // Redirect ke dashboard setelah login
+    }, 1000)
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-6">
           <div className="flex flex-col items-center gap-2">
             <a
@@ -32,7 +51,7 @@ export function LoginForm({
             <h1 className="text-xl font-bold">Welcome to SI Lab</h1>
             <div className="text-center text-sm">
               Don&apos;t have an account?{" "}
-              <a href="#" className="underline underline-offset-4">
+              <a href="/register" className="underline underline-offset-4">
                 Sign up
               </a>
             </div>
@@ -56,15 +75,15 @@ export function LoginForm({
                 required
               />
             </div>
-            <Button type="submit" className="w-full">
-              Login
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Logging in..." : "Login"}
             </Button>
           </div>
         </div>
       </form>
       <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
+        By clicking continue, you agree to our <a href="/terms">Terms of Service</a>{" "}
+        and <a href="/privacy">Privacy Policy</a>.
       </div>
     </div>
   )

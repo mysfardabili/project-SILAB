@@ -45,7 +45,7 @@ const MaterialCard: FC<MaterialCardProps> = ({
     const remainingTagsCount = allTags.length - displayedTags.length;
 
     return (
-        <Link href={`/learning/${type}/${id}`}>
+        <Link href={`/dashboard/learnings/materials/${type}/${id}`}>
             <div className="rounded-lg border border-gray-200 overflow-hidden transition-all duration-200 hover:shadow-md hover:border-gray-300 flex flex-col h-full">
                 <div className={`relative ${config.bgColor} h-36`}>
                     {imageUrl && <Image src={imageUrl} alt={title} fill className="object-cover" />}
