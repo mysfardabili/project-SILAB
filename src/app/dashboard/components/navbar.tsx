@@ -18,6 +18,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
+import { removeAuthCookie } from "@/lib/auth";
 
 
 export default function Navbar() {
@@ -40,10 +41,13 @@ export default function Navbar() {
         { label: "My Learning", href: "/dashboard/learnings" },
         { label: "Catalog", href: "/dashboard/catalogs" },
         { label: "Roadmap", href: "/dashboard/roadmaps" },
+        { label: "Progress", href: "/progress" },
+        { label: "Resources", href: "/resources" },
     ];
 
-    const handleLogout = () => {
-        // Add logout logic here (clear session, cookies, etc.)
+    const handleLogout = async () => {
+        const { removeAuthCookie } = await import("@/lib/auth");
+        await removeAuthCookie();
         router.push("/login");
     };
 
@@ -111,10 +115,11 @@ export default function Navbar() {
             </div>
 
             {/* Secondary Nav */}
-            <div className="px-6 md:px-12 lg:px-24">
-                <div className="flex gap-6">
+            <div className="px-6 md:px-12 lg:px-24 overflow-x-auto no-scrollbar">
+                <div className="flex gap-6 min-w-max">
                     {navItems.map((item) => {
-                        const isActive = pathname === item.href;
+                        // Support active states that match subpaths too, e.g., /resources/123
+                        const isActive = pathname === item.href || (item.href !== "/dashboard/home" && pathname.startsWith(item.href));
                         return (
                             <Link
                                 key={item.href}

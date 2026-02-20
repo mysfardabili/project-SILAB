@@ -1,14 +1,16 @@
 import Link from "next/link";
 import { ArrowLeft, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { use } from "react";
 
 interface HomeDiscussionDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default function HomeDiscussionDetailPage({ params }: HomeDiscussionDetailPageProps) {
+export default function HomeDiscussionDetailPage({ params: paramsPromise }: HomeDiscussionDetailPageProps) {
+  const params = use(paramsPromise);
   return (
     <div className="py-6 px-6 md:py-8 md:px-12 lg:px-24 xl:px-24 space-y-6 md:space-y-8">
       {/* Header */}

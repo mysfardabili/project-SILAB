@@ -1,16 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, User, Mail, Phone, MapPin, Calendar, Edit, Camera, Award, BookOpen, Clock } from "lucide-react";
+import { ArrowLeft, User, Mail, Phone, MapPin, Calendar, Edit, Award, BookOpen, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
 
 export default function HomeProfilePage() {
-  const [isEditMode, setIsEditMode] = useState(false);
 
   // Mock user data
   const user = {
@@ -67,13 +64,12 @@ export default function HomeProfilePage() {
               Settings
             </Button>
           </Link>
-          <Button 
-            onClick={() => setIsEditMode(!isEditMode)}
-            className="flex items-center gap-2"
-          >
-            <Edit className="h-4 w-4" />
-            {isEditMode ? 'Save Changes' : 'Edit Profile'}
-          </Button>
+          <Link href="/dashboard/home/profile/edit">
+            <Button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700">
+              <Edit className="h-4 w-4" />
+              Edit Profile
+            </Button>
+          </Link>
         </div>
       </div>
 
@@ -85,17 +81,12 @@ export default function HomeProfilePage() {
             <CardContent className="pt-6">
               <div className="text-center space-y-4">
                 <div className="relative inline-block">
-                  <Avatar className="w-24 h-24 mx-auto">
+                  <Avatar className="w-24 h-24 mx-auto border-2 border-indigo-100 shadow-sm">
                     <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback className="text-xl font-semibold bg-blue-100 text-blue-800">
+                    <AvatarFallback className="text-xl font-semibold bg-indigo-100 text-indigo-800">
                       {getInitials(user.name)}
                     </AvatarFallback>
                   </Avatar>
-                  {isEditMode && (
-                    <button className="absolute bottom-0 right-0 bg-blue-500 text-white rounded-full p-2 hover:bg-blue-600 transition-colors">
-                      <Camera className="h-3 w-3" />
-                    </button>
-                  )}
                 </div>
                 
                 <div>
@@ -105,7 +96,7 @@ export default function HomeProfilePage() {
                 </div>
 
                 <div className="flex justify-center">
-                  <Badge variant="secondary" className="bg-green-100 text-green-800">
+                  <Badge variant="secondary" className="bg-green-100 text-green-800 border-none">
                     GPA: {user.gpa}
                   </Badge>
                 </div>
@@ -146,15 +137,10 @@ export default function HomeProfilePage() {
             <CardContent>
               <div className="flex flex-wrap gap-2">
                 {user.skills.map((skill, index) => (
-                  <Badge key={index} variant="outline" className="text-xs">
+                  <Badge key={index} variant="outline" className="text-xs bg-gray-50">
                     {skill}
                   </Badge>
                 ))}
-                {isEditMode && (
-                  <Button variant="outline" size="sm" className="h-6 text-xs">
-                    + Add Skill
-                  </Button>
-                )}
               </div>
             </CardContent>
           </Card>
@@ -166,30 +152,30 @@ export default function HomeProfilePage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <Card className="text-center">
               <CardContent className="pt-4">
-                <BookOpen className="h-6 w-6 text-blue-500 mx-auto mb-2" />
+                <BookOpen className="h-6 w-6 text-indigo-500 mx-auto mb-2" />
                 <div className="text-2xl font-bold text-gray-900">{user.stats.coursesCompleted}</div>
-                <div className="text-xs text-gray-500">Courses Completed</div>
+                <div className="text-xs text-gray-500 mt-1">Courses</div>
               </CardContent>
             </Card>
             <Card className="text-center">
               <CardContent className="pt-4">
                 <Clock className="h-6 w-6 text-green-500 mx-auto mb-2" />
                 <div className="text-2xl font-bold text-gray-900">{user.stats.totalStudyHours}h</div>
-                <div className="text-xs text-gray-500">Study Hours</div>
+                <div className="text-xs text-gray-500 mt-1">Study Hours</div>
               </CardContent>
             </Card>
             <Card className="text-center">
               <CardContent className="pt-4">
                 <User className="h-6 w-6 text-purple-500 mx-auto mb-2" />
                 <div className="text-2xl font-bold text-gray-900">{user.stats.discussionPosts}</div>
-                <div className="text-xs text-gray-500">Discussion Posts</div>
+                <div className="text-xs text-gray-500 mt-1">Forum Posts</div>
               </CardContent>
             </Card>
             <Card className="text-center">
               <CardContent className="pt-4">
                 <Award className="h-6 w-6 text-orange-500 mx-auto mb-2" />
                 <div className="text-2xl font-bold text-gray-900">{user.stats.helpfulAnswers}</div>
-                <div className="text-xs text-gray-500">Helpful Answers</div>
+                <div className="text-xs text-gray-500 mt-1">Helpful Answers</div>
               </CardContent>
             </Card>
           </div>
@@ -200,16 +186,7 @@ export default function HomeProfilePage() {
               <CardTitle className="text-lg">About Me</CardTitle>
             </CardHeader>
             <CardContent>
-              {isEditMode ? (
-                <textarea
-                  className="w-full p-3 border border-gray-300 rounded-md resize-none"
-                  rows={4}
-                  defaultValue={user.bio}
-                  placeholder="Tell us about yourself..."
-                />
-              ) : (
-                <p className="text-sm text-gray-600 leading-relaxed">{user.bio}</p>
-              )}
+              <p className="text-sm text-gray-600 leading-relaxed">{user.bio}</p>
             </CardContent>
           </Card>
 
@@ -217,19 +194,19 @@ export default function HomeProfilePage() {
           <Card>
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
-                <Award className="h-5 w-5 text-yellow-500" />
+                <Award className="h-5 w-5 text-amber-500" />
                 Recent Achievements
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {user.achievements.map((achievement, index) => (
-                <div key={index} className="flex items-start gap-4 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                  <div className="bg-yellow-500 text-white rounded-full p-2">
+                <div key={index} className="flex items-start gap-4 p-3 bg-amber-50 rounded-lg border border-amber-100">
+                  <div className="bg-amber-500 text-white rounded-full p-2 shadow-sm">
                     <Award className="h-4 w-4" />
                   </div>
                   <div className="flex-1">
                     <h4 className="font-medium text-gray-900">{achievement.title}</h4>
-                    <p className="text-sm text-gray-600">{achievement.description}</p>
+                    <p className="text-sm text-gray-600 mt-0.5">{achievement.description}</p>
                     <p className="text-xs text-gray-500 mt-1">{achievement.date}</p>
                   </div>
                 </div>
@@ -244,7 +221,7 @@ export default function HomeProfilePage() {
             </CardHeader>
             <CardContent>
               <div className="text-center py-8">
-                <Clock className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                <Clock className="h-10 w-10 text-gray-300 mx-auto mb-3" />
                 <p className="text-gray-500">Activity tracking coming soon</p>
               </div>
             </CardContent>

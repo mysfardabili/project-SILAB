@@ -8,15 +8,16 @@ import { Button } from '@/components/ui/button';
 
 // Next.js akan secara otomatis memberikan 'params' ke komponen halaman ini
 type Props = {
-  params: {
+  params: Promise<{
     slug: string; // 'slug' ini sesuai dengan nama folder '[slug]'
-  };
+  }>;
 };
 
 // Ini adalah Server Component, berjalan di sisi server untuk mengambil data
-const RoadmapDetailPage = ({ params }: Props) => {
+const RoadmapDetailPage = async ({ params }: Props) => {
   // 1. Ambil slug dari URL, contoh: "frontend-developer"
-  const slug = params.slug;
+  const resolvedParams = await params;
+  const slug = resolvedParams.slug;
 
   // 2. Panggil data dari library kita menggunakan slug tersebut
   const roadmap = getRoadmapBySlug(slug);

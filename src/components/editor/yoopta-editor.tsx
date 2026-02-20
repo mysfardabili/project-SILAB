@@ -181,9 +181,9 @@ export default function Editor({
             <YooptaEditor
                 width="100%"
                 editor={editor}
-                plugins={plugins}
-                tools={TOOLS}
-                marks={MARKS}
+                plugins={plugins as any}
+                tools={TOOLS as any}
+                marks={MARKS as any}
                 value={editorValue}
                 placeholder="Type something"
                 selectionBoxRoot={selectionRef}

@@ -1,14 +1,13 @@
 "use client"
 
-import { GalleryVerticalEnd } from "lucide-react"
-import { useRouter } from "next/navigation"
 import { useState } from "react"
-
+import { useRouter } from "next/navigation"
+import Image from "next/image"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import Image from "next/image"
+import { setAuthCookie } from "@/lib/auth"
 
 export function LoginForm({
   className,
@@ -16,17 +15,40 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setError(null)
+    
+    const formData = new FormData(e.currentTarget)
+    const email = formData.get("email") as string
+    const password = formData.get("password") as string
+
+    if (!email || !password) {
+        setError("Email and password are required")
+        return
+    }
+
+    if (password.length < 6) {
+        setError("Password must be at least 6 characters long")
+        return
+    }
+
     setIsLoading(true)
     
-    // Simulate login process
-    // Nanti bisa diganti dengan actual authentication logic
-    setTimeout(() => {
-      setIsLoading(false)
-      router.push("/dashboard") // Redirect ke dashboard setelah login
-    }, 1000)
+    try {
+        // Simulate login process delay
+        await new Promise(resolve => setTimeout(resolve, 800))
+        
+        await setAuthCookie("dummy-auth-token")
+        
+        router.push("/dashboard/home") // Redirect ke dashboard setelah login
+    } catch (err) {
+        setError("Failed to login. Please try again.")
+    } finally {
+        setIsLoading(false)
+    }
   }
 
   return (
@@ -57,10 +79,16 @@ export function LoginForm({
             </div>
           </div>
           <div className="flex flex-col gap-6">
+            {error && (
+              <div className="p-3 text-sm text-red-500 bg-red-50 rounded-md">
+                {error}
+              </div>
+            )}
             <div className="grid gap-3">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
+                name="email"
                 type="email"
                 placeholder="m@example.com"
                 required
@@ -70,6 +98,7 @@ export function LoginForm({
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
+                name="password"
                 type="password"
                 placeholder="password"
                 required

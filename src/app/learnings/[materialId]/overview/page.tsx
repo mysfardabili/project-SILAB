@@ -17,9 +17,9 @@ import Image from 'next/image'
 import SiLabAccordion from '@/components/ui/si-lab-accordion'
 
 interface MaterialOverviewProps {
-    params: {
+    params: Promise<{
         materialId: string
-    }
+    }>
 }
 
 const accordionData = [
@@ -54,7 +54,7 @@ const instructors = [
 ]
 
 const MaterialOverviewPage: React.FC<MaterialOverviewProps> = async ({ params }) => {
-    const { materialId } = params
+    const { materialId } = await params
 
     return (
         <div className='py-6 px-6 md:py-8 md:px-12 lg:px-24 xl:px-32 space-y-8 bg-gray-50'>
@@ -89,18 +89,7 @@ const MaterialOverviewPage: React.FC<MaterialOverviewProps> = async ({ params })
 
                         {/* Course Stats */}
                         <div className='mt-6 flex flex-wrap gap-4'>
-                            {/* <div className='flex items-center gap-2'>
-                                <Users className='w-4 h-4' />
-                                <span className='text-sm'>2,345 enrolled</span>
-                            </div> */}
-                            {/* <div className='flex items-center gap-2'>
-                                <Clock className='w-4 h-4' />
-                                <span className='text-sm'>2h 30m total</span>
-                            </div> */}
-                            {/* <div className='flex items-center gap-2'>
-                                <Star className='w-4 h-4 text-yellow-300' />
-                                <span className='text-sm'>4.8 (236 reviews)</span>
-                            </div> */}
+                            {/* Stats commented out */}
                         </div>
 
                         {/* Tags */}
@@ -115,9 +104,6 @@ const MaterialOverviewPage: React.FC<MaterialOverviewProps> = async ({ params })
                             <Button className='bg-white text-indigo-700 hover:bg-white/90 transition-colors font-medium flex items-center gap-2'>
                                 Get Started <ArrowRight className="w-4 h-4" />
                             </Button>
-                            {/* <Button variant="outline" className='border-white/30 text-white hover:bg-white/10 transition-colors flex items-center gap-2'>
-                                <BookmarkPlus className="w-4 h-4" /> Save for Later
-                            </Button> */}
                         </div>
                     </div>
 
@@ -135,8 +121,6 @@ const MaterialOverviewPage: React.FC<MaterialOverviewProps> = async ({ params })
                     </div>
                 </div>
             </div>
-
-            
 
             {/* Progress Bar */}
             <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
@@ -330,13 +314,24 @@ const MaterialOverviewPage: React.FC<MaterialOverviewProps> = async ({ params })
 }
 
 // Helper Components
-const CheckIcon = ({ className }) => (
+interface CheckIconProps {
+    className?: string;
+}
+
+const CheckIcon: React.FC<CheckIconProps> = ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="20 6 9 17 4 12"></polyline>
     </svg>
 )
 
-const RelatedCourseCard = ({ title, level, duration, image }) => (
+interface RelatedCourseCardProps {
+    title: string;
+    level: string;
+    duration: string;
+    image: string;
+}
+
+const RelatedCourseCard: React.FC<RelatedCourseCardProps> = ({ title, level, duration, image }) => (
     <div className="flex items-start gap-3">
         <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden shrink-0">
             <Image src={image} alt={title} width={40} height={40} />
