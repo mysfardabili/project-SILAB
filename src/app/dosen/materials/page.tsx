@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { DOSEN_CLASSES, DOSEN_MATERIALS, type MatType, type DosenMaterial } from "@/lib/mockData";
 import {
   Plus, Search, FileText, Video, HelpCircle, BookOpen,
   MoreVertical, Edit2, Trash2, GripVertical,
@@ -23,23 +24,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 
-const CLASSES = [
-  { id: "c1", name: "Teknologi Web" },
-  { id: "c2", name: "Basis Data" },
-  { id: "c3", name: "Pemrograman Web" },
-];
+// CLASSES and Material types are now imported from mockData.ts
+type Material = DosenMaterial;
 
-type MatType = "dokumen" | "video" | "quiz" | "learning_path";
-
-interface Material {
-  id: string;
-  title: string;
-  type: MatType;
-  course: string;
-  order: number;
-  published: boolean;
-  createdAt: string;
-}
+const CLASSES = DOSEN_CLASSES;
 
 const TYPE_CONFIG: Record<MatType, { label: string; icon: typeof FileText; color: string; bg: string }> = {
   dokumen: { label: "Dokumen", icon: FileText, color: "text-blue-600", bg: "bg-blue-50" },
@@ -48,20 +36,11 @@ const TYPE_CONFIG: Record<MatType, { label: string; icon: typeof FileText; color
   learning_path: { label: "Learning Path", icon: BookOpen, color: "text-emerald-600", bg: "bg-emerald-50" },
 };
 
-const INITIAL: Material[] = [
-  { id: "m1", title: "Pengenalan Next.js 15 dan App Router", type: "dokumen", course: "c1", order: 1, published: true, createdAt: "1 Mar 2026" },
-  { id: "m2", title: "Video Tutorial: Setup Next.js Project", type: "video", course: "c1", order: 2, published: true, createdAt: "2 Mar 2026" },
-  { id: "m3", title: "Quiz: Konsep Dasar Next.js", type: "quiz", course: "c1", order: 3, published: false, createdAt: "3 Mar 2026" },
-  { id: "m4", title: "Normalisasi Database", type: "dokumen", course: "c2", order: 1, published: true, createdAt: "28 Feb 2026" },
-  { id: "m5", title: "SQL JOIN Operations", type: "video", course: "c2", order: 2, published: true, createdAt: "2 Mar 2026" },
-  { id: "m6", title: "Dasar-dasar HTML & CSS", type: "learning_path", course: "c3", order: 1, published: true, createdAt: "25 Feb 2026" },
-];
-
 export default function DosenMaterialsPage() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
-  const [materials, setMaterials] = useState<Material[]>(INITIAL);
-  const [selectedClass, setSelectedClass] = useState("c1");
+  const [materials, setMaterials] = useState<Material[]>(DOSEN_MATERIALS);
+  const [selectedClass, setSelectedClass] = useState(DOSEN_CLASSES[0]?.id ?? "c1");
   const [search, setSearch] = useState("");
   const [showCreate, setShowCreate] = useState(false);
   const [form, setForm] = useState({ title: "", type: "dokumen" as MatType });

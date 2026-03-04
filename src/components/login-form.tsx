@@ -7,15 +7,15 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { setAuthCookie } from "@/lib/auth"
-import { useAuth, MOCK_USERS } from "@/context/AuthContext"
+import { setAuthCookie, setRoleCookie } from "@/lib/auth"
+import { useAuth } from "@/context/AuthContext"
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const router = useRouter()
-  const { login } = useAuth()
+  const { login, user } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -42,14 +42,23 @@ export function LoginForm({
         return
       }
 
-      // Set cookie for middleware route protection
+      // Set auth cookie for middleware route protection
       await setAuthCookie("silab-auth-token")
 
+      // Determine role from MOCK_USERS via login result (role is set in AuthContext after login)
+      // We use the email to look up role since user state may not be updated yet (async setState)
+      const trimmedEmail = email.trim().toLowerCase()
+      let role: string = "mahasiswa"
+      if (trimmedEmail === "dosen@silab.id") role = "dosen"
+      else if (trimmedEmail === "admin@silab.id") role = "admin"
+
+      // Save role to cookie so middleware can enforce role-based routing
+      await setRoleCookie(role)
+
       // Role-based redirect
-      const user = MOCK_USERS.find((u) => u.email === email.trim().toLowerCase())
-      if (user?.role === "dosen") {
+      if (role === "dosen") {
         router.push("/dosen/dashboard")
-      } else if (user?.role === "admin") {
+      } else if (role === "admin") {
         router.push("/admin/dashboard")
       } else {
         router.push("/dashboard/home")

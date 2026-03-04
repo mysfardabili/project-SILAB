@@ -38,6 +38,8 @@ export default function DosenDiscussionsPage() {
   const router = useRouter();
   const [discussions, setDiscussions] = useState<Discussion[]>(INITIAL);
   const [search, setSearch] = useState("");
+  const [replyingTo, setReplyingTo] = useState<string | null>(null);
+  const [replyText, setReplyText] = useState("");
 
   useEffect(() => {
     if (!isLoading && user && user.role !== "dosen") router.replace("/dashboard/home");
@@ -50,6 +52,13 @@ export default function DosenDiscussionsPage() {
   };
   const markAnswer = (id: string) => {
     setDiscussions((prev) => prev.map((d) => d.id === id ? { ...d, hasAnswer: !d.hasAnswer } : d));
+  };
+
+  const handleReply = (id: string) => {
+    if (!replyText.trim()) return;
+    setDiscussions((prev) => prev.map((d) => d.id === id ? { ...d, replies: d.replies + 1 } : d));
+    setReplyText("");
+    setReplyingTo(null);
   };
 
   const filtered = discussions
@@ -116,12 +125,44 @@ export default function DosenDiscussionsPage() {
                     >
                       {d.hasAnswer ? "✅ Terjawab" : "Tandai Terjawab"}
                     </button>
-                    <button className="text-xs text-indigo-600 hover:text-indigo-800 font-medium flex items-center gap-1">
-                      Balas <ChevronRight className="w-3 h-3" />
-                    </button>
-                  </div>
-                </div>
-              </div>
+                     <button
+                       onClick={() => setReplyingTo(replyingTo === d.id ? null : d.id)}
+                       className={`text-xs font-medium flex items-center gap-1 transition-colors ${
+                         replyingTo === d.id ? "text-indigo-700" : "text-indigo-600 hover:text-indigo-800"
+                       }`}
+                     >
+                       Balas <ChevronRight className="w-3 h-3" />
+                     </button>
+                   </div>
+                 </div>
+               </div>
+               {/* Inline Reply Form */}
+               {replyingTo === d.id && (
+                 <div className="mt-4 pt-4 border-t border-gray-100 flex gap-3">
+                   <textarea
+                     className="flex-1 resize-none rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400"
+                     rows={3}
+                     placeholder="Tulis balasan Anda..."
+                     value={replyText}
+                     onChange={(e) => setReplyText(e.target.value)}
+                     autoFocus
+                   />
+                   <div className="flex flex-col gap-2">
+                     <button
+                       onClick={() => handleReply(d.id)}
+                       className="px-4 py-2 bg-indigo-600 text-white text-xs font-medium rounded-lg hover:bg-indigo-700 transition-colors"
+                     >
+                       Kirim
+                     </button>
+                     <button
+                       onClick={() => { setReplyingTo(null); setReplyText(""); }}
+                       className="px-4 py-2 bg-gray-100 text-gray-600 text-xs font-medium rounded-lg hover:bg-gray-200 transition-colors"
+                     >
+                       Batal
+                     </button>
+                   </div>
+                 </div>
+               )}
             </CardContent>
           </Card>
         ))}

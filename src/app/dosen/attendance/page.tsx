@@ -3,9 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { DOSEN_CLASSES } from "@/lib/mockData";
 import {
   RefreshCw, QrCode, Copy, Check, Users, Clock, CheckCircle2,
-  XCircle, Edit2, ChevronDown, AlertCircle,
+  XCircle, AlertCircle,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,11 +16,11 @@ import {
 } from "@/components/ui/select";
 import { QRCodeCanvas } from "qrcode.react";
 
-const CLASSES = [
-  { id: "c1", name: "Teknologi Web", code: "TI-301", session: "Pertemuan 8 — 4 Maret 2026" },
-  { id: "c2", name: "Basis Data", code: "TI-201", session: "Pertemuan 7 — 4 Maret 2026" },
-  { id: "c3", name: "Pemrograman Web", code: "TI-401", session: "Pertemuan 6 — 4 Maret 2026" },
-];
+// Use centralized DOSEN_CLASSES — add session info dynamically
+const CLASSES = DOSEN_CLASSES.map((c, i) => ({
+  ...c,
+  session: `Pertemuan ${8 - i} — 5 Maret 2026`,
+}));
 
 type AttStatus = "hadir" | "izin" | "alfa";
 interface Student {
@@ -50,7 +51,7 @@ const STATUS_STYLES: Record<AttStatus, { badge: string; label: string }> = {
 export default function DosenAttendancePage() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
-  const [selectedClass, setSelectedClass] = useState(CLASSES[0].id);
+  const [selectedClass, setSelectedClass] = useState(CLASSES[0]?.id ?? "c1");
   const [code, setCode] = useState<string | null>(null);
   const [countdown, setCountdown] = useState(0);
   const [copied, setCopied] = useState(false);

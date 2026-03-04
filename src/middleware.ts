@@ -16,6 +16,7 @@ const ADMIN_PREFIXES = ['/admin']
 
 export function middleware(request: NextRequest) {
   const authToken = request.cookies.get('auth-token')
+  const userRole = request.cookies.get('user-role')?.value
   const { pathname } = request.nextUrl
 
   // Protected routes (any authenticated user)
@@ -24,21 +25,37 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // Dosen routes (any authenticated user — role check done at page level via AuthContext)
+  // Dosen routes — must be logged in AND have role=dosen
   const isDosenRoute = DOSEN_PREFIXES.some(prefix => pathname.startsWith(prefix))
-  if (isDosenRoute && !authToken) {
-    return NextResponse.redirect(new URL('/login', request.url))
+  if (isDosenRoute) {
+    if (!authToken) {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+    if (userRole && userRole !== 'dosen') {
+      // Redirect to correct dashboard based on role
+      const dest = userRole === 'admin' ? '/admin/dashboard' : '/dashboard/home'
+      return NextResponse.redirect(new URL(dest, request.url))
+    }
   }
 
-  // Admin routes
+  // Admin routes — must be logged in AND have role=admin
   const isAdminRoute = ADMIN_PREFIXES.some(prefix => pathname.startsWith(prefix))
-  if (isAdminRoute && !authToken) {
-    return NextResponse.redirect(new URL('/login', request.url))
+  if (isAdminRoute) {
+    if (!authToken) {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+    if (userRole && userRole !== 'admin') {
+      // Redirect to correct dashboard based on role
+      const dest = userRole === 'dosen' ? '/dosen/dashboard' : '/dashboard/home'
+      return NextResponse.redirect(new URL(dest, request.url))
+    }
   }
 
-  // Auth routes (redirect to dashboard if already logged in)
+  // Auth routes (redirect to correct dashboard if already logged in)
   if (pathname === '/login' || pathname === '/register') {
     if (authToken) {
+      if (userRole === 'dosen') return NextResponse.redirect(new URL('/dosen/dashboard', request.url))
+      if (userRole === 'admin') return NextResponse.redirect(new URL('/admin/dashboard', request.url))
       return NextResponse.redirect(new URL('/dashboard/home', request.url))
     }
   }
@@ -61,3 +78,4 @@ export const config = {
     '/register',
   ],
 }
+

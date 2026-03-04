@@ -88,3 +88,48 @@ export const database: AppMockData = {
 
 // Utilities for mocking delay
 export const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
+// ─────────────────────────────────────────────
+// Shared dosen class data — single source of truth for all dosen pages
+// ─────────────────────────────────────────────
+export interface DosenClass {
+  id: string;
+  name: string;
+  code: string;
+  sks: number;
+  semester: string;
+  schedule: string;
+  room: string;
+  students: number;
+  color: string;
+  status: "active" | "inactive";
+  description?: string;
+}
+
+export const DOSEN_CLASSES: DosenClass[] = [
+  { id: "c1", name: "Teknologi Web", code: "TI-301", sks: 3, semester: "Genap 2025/2026", schedule: "Senin 08:00–09:40, Rabu 13:00–14:40", room: "Lab B-201", students: 32, color: "indigo", status: "active", description: "Mata kuliah ini membahas konsep dan teknologi pengembangan aplikasi web modern menggunakan framework berbasis JavaScript." },
+  { id: "c2", name: "Basis Data", code: "TI-201", sks: 3, semester: "Genap 2025/2026", schedule: "Selasa 10:00–11:40, Kamis 14:00–15:40", room: "Lab A-101", students: 28, color: "emerald", status: "active", description: "Mata kuliah ini membahas konsep perancangan, pengelolaan, dan optimasi basis data relasional menggunakan SQL." },
+  { id: "c3", name: "Pemrograman Web", code: "TI-401", sks: 3, semester: "Genap 2025/2026", schedule: "Rabu 08:00–09:40, Jumat 08:00–09:40", room: "Lab C-301", students: 27, color: "blue", status: "active", description: "Mata kuliah ini berfokus pada implementasi aplikasi web menggunakan teknologi front-end dan back-end modern." },
+];
+
+export type MatType = "dokumen" | "video" | "quiz" | "learning_path";
+
+export interface DosenMaterial {
+  id: string;
+  title: string;
+  type: MatType;
+  course: string; // matches DosenClass.id
+  order: number;
+  published: boolean;
+  createdAt: string;
+}
+
+export const DOSEN_MATERIALS: DosenMaterial[] = [
+  { id: "m1", title: "Pengenalan Next.js 15 dan App Router", type: "dokumen", course: "c1", order: 1, published: true, createdAt: "1 Mar 2026" },
+  { id: "m2", title: "Video Tutorial: Setup Next.js Project", type: "video", course: "c1", order: 2, published: true, createdAt: "2 Mar 2026" },
+  { id: "m3", title: "Quiz: Konsep Dasar Next.js", type: "quiz", course: "c1", order: 3, published: false, createdAt: "3 Mar 2026" },
+  { id: "m4", title: "Normalisasi Database", type: "dokumen", course: "c2", order: 1, published: true, createdAt: "28 Feb 2026" },
+  { id: "m5", title: "SQL JOIN Operations", type: "video", course: "c2", order: 2, published: true, createdAt: "2 Mar 2026" },
+  { id: "m6", title: "Dasar-dasar HTML & CSS", type: "learning_path", course: "c3", order: 1, published: true, createdAt: "25 Feb 2026" },
+];
+

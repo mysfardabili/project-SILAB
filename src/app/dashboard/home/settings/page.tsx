@@ -45,48 +45,60 @@ interface SettingsState {
   playbackSpeed: string;
 }
 
+const SETTINGS_KEY = "silab-user-settings";
+
 export default function HomeSettingsPage() {
   const { user, updateUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [savedMsg, setSavedMsg] = useState(false);
-  const [settings, setSettings] = useState<SettingsState>({
-    // Account Settings — seeded from AuthContext
-    name: user?.name ?? "",
-    email: user?.email ?? "",
-    phone: "+62 812-3456-7890",
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-    
-    // Notification Settings
-    emailNotifications: true,
-    pushNotifications: true,
-    discussionNotifications: true,
-    assignmentReminders: true,
-    weeklyDigest: false,
-    
-    // Privacy Settings
-    profileVisibility: "public",
-    showEmail: false,
-    showPhone: false,
-    showOnlineStatus: true,
-    
-    // Appearance Settings
-    theme: "light",
-    language: "en",
-    timezone: "Asia/Jakarta",
-    
-    // Learning Preferences
-    autoPlayVideos: true,
-    showSubtitles: true,
-    playbackSpeed: "1x"
+
+  // Load settings from localStorage on first render
+  const [settings, setSettings] = useState<SettingsState>(() => {
+    const defaults: SettingsState = {
+      name: user?.name ?? "",
+      email: user?.email ?? "",
+      phone: "+62 812-3456-7890",
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+      emailNotifications: true,
+      pushNotifications: true,
+      discussionNotifications: true,
+      assignmentReminders: true,
+      weeklyDigest: false,
+      profileVisibility: "public",
+      showEmail: false,
+      showPhone: false,
+      showOnlineStatus: true,
+      theme: "light",
+      language: "en",
+      timezone: "Asia/Jakarta",
+      autoPlayVideos: true,
+      showSubtitles: true,
+      playbackSpeed: "1x",
+    };
+    if (typeof window === "undefined") return defaults;
+    try {
+      const stored = localStorage.getItem(SETTINGS_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        // Merge with defaults to handle new fields added later
+        return { ...defaults, ...parsed, name: user?.name ?? parsed.name ?? "", email: user?.email ?? parsed.email ?? "" };
+      }
+    } catch { /* ignore */ }
+    return defaults;
   });
 
   const handleSettingChange = (key: string, value: string | boolean) => {
-    setSettings(prev => ({
-      ...prev,
-      [key]: value
-    }));
+    setSettings(prev => {
+      const next = { ...prev, [key]: value };
+      // Persist non-sensitive fields to localStorage
+      try {
+        const { currentPassword, newPassword, confirmPassword, ...toStore } = next;
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(toStore));
+      } catch { /* ignore */ }
+      return next;
+    });
   };
 
   const handleSave = () => {
@@ -102,6 +114,7 @@ export default function HomeSettingsPage() {
     }
     alert("Password berhasil diperbarui!");
   };
+
 
   return (
     <div className="py-6 px-6 md:py-8 md:px-12 lg:px-24 xl:px-24 space-y-6">

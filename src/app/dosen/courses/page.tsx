@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { DOSEN_CLASSES, type DosenClass } from "@/lib/mockData";
 import {
   Plus, BookOpen, Users, MoreVertical, Search,
   Edit2, Trash2, Eye, ChevronRight,
@@ -20,26 +21,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 
-interface Course {
-  id: string;
-  name: string;
-  code: string;
-  sks: number;
-  semester: string;
-  schedule: string;
-  room: string;
-  students: number;
-  color: string;
-  status: "active" | "inactive";
-}
+// Course type is now imported from mockData as DosenClass
+type Course = DosenClass;
 
 const COLOR_OPTIONS = ["indigo", "emerald", "blue", "purple", "amber"];
-
-const INITIAL_COURSES: Course[] = [
-  { id: "c1", name: "Teknologi Web", code: "TI-301", sks: 3, semester: "Genap 2025/2026", schedule: "Senin 08:00–09:40, Rabu 13:00–14:40", room: "Lab B-201", students: 32, color: "indigo", status: "active" },
-  { id: "c2", name: "Basis Data", code: "TI-201", sks: 3, semester: "Genap 2025/2026", schedule: "Selasa 10:00–11:40, Kamis 14:00–15:40", room: "Lab A-101", students: 28, color: "emerald", status: "active" },
-  { id: "c3", name: "Pemrograman Web", code: "TI-401", sks: 3, semester: "Genap 2025/2026", schedule: "Rabu 08:00–09:40, Jumat 08:00–09:40", room: "Lab C-301", students: 27, color: "blue", status: "active" },
-];
 
 const COLOR_CLASSES: Record<string, { bg: string; text: string; border: string }> = {
   indigo: { bg: "bg-indigo-50", text: "text-indigo-700", border: "border-l-indigo-500" },
@@ -52,7 +37,7 @@ const COLOR_CLASSES: Record<string, { bg: string; text: string; border: string }
 export default function DosenCoursesPage() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
-  const [courses, setCourses] = useState<Course[]>(INITIAL_COURSES);
+  const [courses, setCourses] = useState<Course[]>(DOSEN_CLASSES);
   const [search, setSearch] = useState("");
   const [showCreate, setShowCreate] = useState(false);
   const [form, setForm] = useState({ name: "", code: "", sks: "3", semester: "Genap 2025/2026", schedule: "", room: "", color: "indigo" });

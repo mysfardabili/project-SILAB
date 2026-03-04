@@ -5,13 +5,14 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useUsers } from "@/hooks/useUsers";
 import {
-  Search, Plus, Filter, MoreVertical, Edit2, Trash2,
-  UserCheck, UserX, KeyRound, Download, Loader2
+  Search, Plus, MoreVertical, Edit2, Trash2,
+  UserCheck, UserX, KeyRound, Download, X,
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
@@ -19,11 +20,12 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 
-type UserRole = "mahasiswa" | "dosen";
+type UserRole = "mahasiswa" | "dosen" | "admin";
 type UserStatus = "active" | "inactive";
 
 interface UserRecord {
@@ -31,12 +33,12 @@ interface UserRecord {
   name: string;
   email: string;
   role: UserRole;
-  prodi: string;
+  prodi?: string;
   nim?: string;
   nip?: string;
   angkatan?: string;
-  status: UserStatus;
-  joinedAt: string;
+  status?: UserStatus;
+  joinedAt?: string;
 }
 
 function getInitials(name: string) {
@@ -49,6 +51,8 @@ export default function AdminUsersPage() {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<"all" | UserRole>("all");
   const [statusFilter, setStatusFilter] = useState<"all" | UserStatus>("all");
+  const [editUser, setEditUser] = useState<UserRecord | null>(null);
+  const [editForm, setEditForm] = useState({ name: "", email: "", role: "mahasiswa" as UserRole, status: "active" as UserStatus });
 
   const { users, isLoading, refetch, mutate } = useUsers({ 
     role: roleFilter, 
@@ -63,22 +67,43 @@ export default function AdminUsersPage() {
   if (authLoading || !user || user.role !== "admin") return null;
 
   const toggleStatus = async (id: string) => {
-    // Optimistic UI update
-    const previous = users;
-    mutate(users.map((u) => u.id === id ? { ...u, status: u.status === "active" ? "inactive" : "active" } : u));
-    
-    // In real app, make PUT/PATCH request here
-    // await fetch(`/api/users/${id}`, { method: "PATCH", ... }) 
-    
-    // Simulate delay
+    mutate(users.map((u) => u.id === id ? { ...u, status: (u.status === "active" ? "inactive" : "active") as UserStatus } : u));
     setTimeout(() => refetch(), 500);
   };
   
   const deleteUser = async (id: string) => {
     mutate(users.filter((u) => u.id !== id));
-    // In real app, make DELETE request here
     setTimeout(() => refetch(), 500);
   };
+
+  const openEdit = (u: UserRecord) => {
+    setEditUser(u);
+    setEditForm({ name: u.name, email: u.email, role: u.role, status: u.status ?? "active" });
+  };
+
+  const handleEditSave = () => {
+    if (!editUser) return;
+    mutate(users.map((u) => u.id === editUser.id ? { ...u, ...editForm } : u));
+    setEditUser(null);
+  };
+
+  const handleExportCSV = () => {
+    const headers = ["ID", "Nama", "Email", "Role", "Program Studi", "NIM/NIP", "Status", "Bergabung"];
+    const rows = users.map((u) => [
+      u.id, u.name, u.email, u.role, u.prodi,
+      u.nim ?? u.nip ?? "", u.status, u.joinedAt,
+    ]);
+    const csvContent = [headers, ...rows]
+      .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+      .join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `users_silab_${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };;
 
   return (
     <div className="px-6 md:px-8 py-8 max-w-7xl mx-auto space-y-6">
@@ -87,9 +112,9 @@ export default function AdminUsersPage() {
           <h1 className="text-2xl font-bold text-gray-900">Manajemen Pengguna</h1>
           <p className="text-gray-500 text-sm mt-1">{isLoading ? "Memuat data..." : `${users.length} pengguna`}</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline">
-            <Download className="w-4 h-4 mr-2" /> Export
+      <div className="flex gap-2">
+          <Button variant="outline" onClick={handleExportCSV}>
+            <Download className="w-4 h-4 mr-2" /> Export CSV
           </Button>
           <Button asChild className="bg-indigo-600 hover:bg-indigo-700">
             <Link href="/admin/users/new">
@@ -199,7 +224,7 @@ export default function AdminUsersPage() {
                         </button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem><Edit2 className="w-4 h-4 mr-2" /> Edit</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => openEdit(u)}><Edit2 className="w-4 h-4 mr-2" /> Edit</DropdownMenuItem>
                         <DropdownMenuItem><KeyRound className="w-4 h-4 mr-2" /> Reset Password</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => toggleStatus(u.id)}>
@@ -226,6 +251,54 @@ export default function AdminUsersPage() {
           )}
         </div>
       </Card>
+
+      {/* Edit User Modal */}
+      <Dialog open={!!editUser} onOpenChange={(open) => !open && setEditUser(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Edit2 className="w-4 h-4 text-indigo-600" /> Edit Pengguna
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-1">
+            <div className="space-y-1">
+              <Label>Nama Lengkap</Label>
+              <Input value={editForm.name} onChange={(e) => setEditForm(f => ({ ...f, name: e.target.value }))} />
+            </div>
+            <div className="space-y-1">
+              <Label>Email</Label>
+              <Input type="email" value={editForm.email} onChange={(e) => setEditForm(f => ({ ...f, email: e.target.value }))} />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <Label>Role</Label>
+                <Select value={editForm.role} onValueChange={(v) => setEditForm(f => ({ ...f, role: v as UserRole }))}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="mahasiswa">Mahasiswa</SelectItem>
+                    <SelectItem value="dosen">Dosen</SelectItem>
+                    <SelectItem value="admin">Admin</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1">
+                <Label>Status</Label>
+                <Select value={editForm.status} onValueChange={(v) => setEditForm(f => ({ ...f, status: v as UserStatus }))}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Aktif</SelectItem>
+                    <SelectItem value="inactive">Nonaktif</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="flex gap-3 pt-1">
+              <Button variant="outline" className="flex-1" onClick={() => setEditUser(null)}>Batal</Button>
+              <Button className="flex-1 bg-indigo-600 hover:bg-indigo-700" onClick={handleEditSave}>Simpan</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

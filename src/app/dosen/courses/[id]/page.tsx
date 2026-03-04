@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { DOSEN_CLASSES } from "@/lib/mockData";
 import {
   ArrowLeft, Users, BookOpen, Clock, MapPin, Search, Download
 } from "lucide-react";
@@ -13,14 +14,10 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const MOCK_COURSE = {
-  id: "c1", name: "Teknologi Web", code: "TI-301", sks: 3, semester: "Genap 2025/2026", 
-  schedule: "Senin 08:00–09:40, Rabu 13:00–14:40", room: "Lab B-201", 
-  students: 32, color: "indigo", status: "active" as const,
-  description: "Mata kuliah ini membahas konsep dan teknologi pengembangan aplikasi web modern menggunakan framework berbasis JavaScript."
-};
+// Per-class mock student data
+const MOCK_STUDENTS_BY_COURSE: Record<string, typeof MOCK_STUDENTS_DEFAULT> = {};
 
-const MOCK_STUDENTS = [
+const MOCK_STUDENTS_DEFAULT = [
   { id: "s1", name: "Andi Wijaya", nim: "2021010001", email: "andi@student.silab.id", status: "Aktif" },
   { id: "s2", name: "Bella Rahayu", nim: "2021010002", email: "bella@student.silab.id", status: "Aktif" },
   { id: "s3", name: "Candra Kusuma", nim: "2021010003", email: "candra@student.silab.id", status: "Cuti" },
@@ -34,16 +31,41 @@ export default function CourseDetailPage() {
   const params = useParams();
   const [search, setSearch] = useState("");
 
+  const courseId = Array.isArray(params.id) ? params.id[0] : params.id ?? "";
+  const course = DOSEN_CLASSES.find((c) => c.id === courseId);
+  const MOCK_STUDENTS = MOCK_STUDENTS_DEFAULT;
+
   useEffect(() => {
     if (!isLoading && user && user.role !== "dosen") router.replace("/dashboard/home");
   }, [user, isLoading, router]);
 
   if (isLoading || !user || user.role !== "dosen") return null;
 
+  if (!course) {
+    return (
+      <div className="px-6 md:px-10 py-16 max-w-7xl mx-auto text-center">
+        <h1 className="text-2xl font-bold text-gray-800 mb-3">Kelas tidak ditemukan</h1>
+        <p className="text-gray-500 mb-6">Kelas dengan ID "{courseId}" tidak ada.</p>
+        <Link href="/dosen/courses" className="text-indigo-600 hover:underline font-medium">
+          ← Kembali ke Kelas
+        </Link>
+      </div>
+    );
+  }
+
   const filteredStudents = MOCK_STUDENTS.filter(s => 
     s.name.toLowerCase().includes(search.toLowerCase()) || 
     s.nim.includes(search)
   );
+
+  const COLOR_MAP: Record<string, string> = {
+    indigo: "bg-indigo-100 text-indigo-700",
+    emerald: "bg-emerald-100 text-emerald-700",
+    blue: "bg-blue-100 text-blue-700",
+    purple: "bg-purple-100 text-purple-700",
+    amber: "bg-amber-100 text-amber-700",
+  };
+  const badgeClass = COLOR_MAP[course.color] ?? COLOR_MAP.indigo;
 
   return (
     <div className="px-6 md:px-10 py-8 max-w-7xl mx-auto space-y-6">
@@ -55,13 +77,13 @@ export default function CourseDetailPage() {
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <Badge className="bg-indigo-100 text-indigo-700 border-none px-3 py-1 font-semibold">{MOCK_COURSE.code}</Badge>
-              <Badge className={MOCK_COURSE.status === "active" ? "bg-emerald-100 text-emerald-700 border-none" : "bg-gray-100 text-gray-700 border-none"}>
-                {MOCK_COURSE.status === "active" ? "Kelas Aktif" : "Selesai"}
+              <Badge className={`border-none px-3 py-1 font-semibold ${badgeClass}`}>{course.code}</Badge>
+              <Badge className={course.status === "active" ? "bg-emerald-100 text-emerald-700 border-none" : "bg-gray-100 text-gray-700 border-none"}>
+                {course.status === "active" ? "Kelas Aktif" : "Selesai"}
               </Badge>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">{MOCK_COURSE.name}</h1>
-            <p className="text-gray-500 mt-2 max-w-2xl">{MOCK_COURSE.description}</p>
+            <h1 className="text-3xl font-bold text-gray-900">{course.name}</h1>
+            <p className="text-gray-500 mt-2 max-w-2xl">{course.description}</p>
           </div>
           <div className="flex gap-2 shrink-0">
             <Button variant="outline" onClick={() => router.push("/dosen/materials")}>
@@ -83,31 +105,31 @@ export default function CourseDetailPage() {
                 <Clock className="w-5 h-5 text-gray-400 shrink-0" />
                 <div>
                   <p className="font-medium text-gray-900">Jadwal</p>
-                  <p className="text-gray-500">{MOCK_COURSE.schedule}</p>
+                  <p className="text-gray-500">{course.schedule}</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-gray-400 shrink-0" />
                 <div>
                   <p className="font-medium text-gray-900">Ruangan</p>
-                  <p className="text-gray-500">{MOCK_COURSE.room}</p>
+                  <p className="text-gray-500">{course.room}</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <Users className="w-5 h-5 text-gray-400 shrink-0" />
                 <div>
                   <p className="font-medium text-gray-900">Total Mahasiswa</p>
-                  <p className="text-gray-500">{MOCK_COURSE.students} Terdaftar</p>
+                  <p className="text-gray-500">{course.students} Terdaftar</p>
                 </div>
               </div>
               <div className="pt-4 border-t border-gray-100 grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-xs text-gray-500 mb-0.5">Semester</p>
-                  <p className="font-medium text-gray-900">{MOCK_COURSE.semester}</p>
+                  <p className="font-medium text-gray-900">{course.semester}</p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 mb-0.5">SKS</p>
-                  <p className="font-medium text-gray-900">{MOCK_COURSE.sks} SKS</p>
+                  <p className="font-medium text-gray-900">{course.sks} SKS</p>
                 </div>
               </div>
             </CardContent>
