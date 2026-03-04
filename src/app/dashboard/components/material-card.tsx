@@ -43,9 +43,12 @@ const MaterialCard: FC<MaterialCardProps> = ({
     const allTags = [...tags, priorityLabel];
     const displayedTags = allTags.slice(0, 3);
     const remainingTagsCount = allTags.length - displayedTags.length;
+    const href = type === "course" 
+        ? `/dashboard/learnings/courses/${id}`
+        : `/dashboard/learnings/materials/${type}/${id}`;
 
     return (
-        <Link href={`/dashboard/learnings/materials/${type}/${id}`}>
+        <Link href={href}>
             <div className="rounded-lg border border-gray-200 overflow-hidden transition-all duration-200 hover:shadow-md hover:border-gray-300 flex flex-col h-full">
                 <div className={`relative ${config.bgColor} h-36`}>
                     {imageUrl && <Image src={imageUrl} alt={title} fill className="object-cover" />}

@@ -1,48 +1,45 @@
-"use client";
-
 import Link from "next/link";
-import { Search, Home, ArrowLeft } from "lucide-react";
+import Image from "next/image";
+import { ArrowLeft, AlertCircle } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md text-center space-y-8">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-6">
+      <div className="max-w-md w-full text-center space-y-8">
+        <div className="flex justify-center mb-4">
+          <Image
+            src="/silab-logo.svg"
+            alt="SI Lab"
+            width={180}
+            height={48}
+            priority
+            className="dark:invert"
+          />
+        </div>
         
-        {/* Error Graphic */}
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center justify-center opacity-10">
-            <Search className="w-48 h-48 text-indigo-600" />
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center">
+          <div className="h-16 w-16 bg-red-50 rounded-full flex items-center justify-center mb-6">
+            <AlertCircle className="h-8 w-8 text-red-500" />
           </div>
-          <h1 className="text-9xl font-black text-gray-900 tracking-tight">404</h1>
-        </div>
-
-        {/* Content */}
-        <div className="space-y-4">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
-            Page not found
-          </h2>
-          <p className="text-gray-500 text-sm sm:text-base max-w-sm mx-auto">
-            Sorry, we couldn't find the page you're looking for. It might have been moved, deleted, or perhaps the URL is incorrect.
+          
+          <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight mb-2">404</h1>
+          <h2 className="text-lg font-semibold text-gray-800 mb-2">Halaman Tidak Ditemukan</h2>
+          <p className="text-sm text-gray-500 mb-8 max-w-sm">
+            Maaf, halaman yang Anda cari tidak dapat ditemukan atau telah dipindahkan.
           </p>
-        </div>
-
-        {/* Actions */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
-          <button 
-            type="button"
-            onClick={() => window.history.back()}
-            className="inline-flex items-center justify-center w-full sm:w-auto h-11 px-8 bg-white border border-gray-200 hover:bg-gray-100 text-gray-900 rounded-md text-sm font-medium transition-colors"
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" /> Go Back
-          </button>
+          
           <Link 
-            href="/dashboard/home"
-            className="inline-flex items-center justify-center w-full sm:w-auto h-11 px-8 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md shadow-sm shadow-indigo-200 text-sm font-medium transition-colors"
+            href="/login" 
+            className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors w-full justify-center"
           >
-            <Home className="mr-2 h-4 w-4" /> Dashboard
+            <ArrowLeft className="w-4 h-4" />
+            Kembali ke Beranda
           </Link>
         </div>
         
+        <p className="text-xs text-gray-400">
+          © {new Date().getFullYear()} Universitas Ahmad Dahlan. Hak Cipta Dilindungi.
+        </p>
       </div>
     </div>
   );

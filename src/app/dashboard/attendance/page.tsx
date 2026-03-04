@@ -1,6 +1,6 @@
 "use client";
 
-import { useAttendance } from "@/hooks/useAttendance";
+import { useStudentAttendance } from "@/hooks/useStudentAttendance";
 import { AttendanceSummary } from "./components/AttendanceSummary";
 import { RecentAttendance } from "./components/RecentAttendance";
 import { UpcomingClasses } from "./components/UpcomingClasses";
@@ -11,7 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { useEffect } from "react";
 
 const AttendancePage = () => {
-  const { data, loading, refreshData } = useAttendance();
+  const { data, loading, refreshData } = useStudentAttendance();
 
   useEffect(() => {
     refreshData();

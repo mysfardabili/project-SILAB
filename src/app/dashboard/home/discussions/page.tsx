@@ -60,9 +60,11 @@ export default function DiscussionsListPage() {
             <p className="text-sm text-gray-500">Join the conversation with other learners and instructors.</p>
           </div>
         </div>
-        <Button className="flex items-center gap-2">
-          <Plus className="h-4 w-4" /> New Discussion
-        </Button>
+        <Link href="/dashboard/home/discussions/new">
+          <Button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700">
+            <Plus className="h-4 w-4" /> Buat Diskusi
+          </Button>
+        </Link>
       </div>
 
       {/* Search and Filter */}

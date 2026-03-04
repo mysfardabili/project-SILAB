@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Settings, User, Bell, Shield, Palette, Globe, Database, Save, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Settings, User, Bell, Shield, Palette, Database, Save, Eye, EyeOff, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 interface SettingsState {
   // Account Settings
@@ -45,11 +46,13 @@ interface SettingsState {
 }
 
 export default function HomeSettingsPage() {
+  const { user, updateUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
+  const [savedMsg, setSavedMsg] = useState(false);
   const [settings, setSettings] = useState<SettingsState>({
-    // Account Settings
-    name: "John Doe",
-    email: "john.doe@students.uad.ac.id",
+    // Account Settings — seeded from AuthContext
+    name: user?.name ?? "",
+    email: user?.email ?? "",
     phone: "+62 812-3456-7890",
     currentPassword: "",
     newPassword: "",
@@ -87,16 +90,17 @@ export default function HomeSettingsPage() {
   };
 
   const handleSave = () => {
-    // Simulate saving
-    alert("Settings saved successfully! 🎉");
+    if (user) updateUser({ name: settings.name, email: settings.email });
+    setSavedMsg(true);
+    setTimeout(() => setSavedMsg(false), 2500);
   };
 
   const handleResetPassword = () => {
     if (settings.newPassword !== settings.confirmPassword) {
-      alert("New passwords don't match!");
+      alert("Password baru tidak cocok!");
       return;
     }
-    alert("Password updated successfully!");
+    alert("Password berhasil diperbarui!");
   };
 
   return (

@@ -85,10 +85,19 @@ const StudentCheckIn = () => {
             // Simulate API call
             await new Promise(resolve => setTimeout(resolve, 1500));
 
-            if (checkinMethod === "code" && checkinCode.length === 0) {
-                setError("Invalid check-in code");
-                setIsLoading(false);
-                return;
+            if (checkinMethod === "code") {
+                if (!/^\d{6}$/.test(checkinCode)) {
+                    setError("Kode absensi harus berupa 6 digit angka");
+                    setIsLoading(false);
+                    return;
+                }
+                
+                // Mock verifying the specific code, e.g. "123456" is valid
+                if (checkinCode !== "123456") {
+                    setError("Kode absensi tidak valid atau sudah kadaluarsa");
+                    setIsLoading(false);
+                    return;
+                }
             }
 
             // Determine if student is late based on current time vs class start time

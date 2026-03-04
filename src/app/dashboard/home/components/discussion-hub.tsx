@@ -1,49 +1,10 @@
 "use client";
 
-import { MessageSquare, ChevronRight, Users, Reply, ThumbsUp, MessageCircle } from "lucide-react";
+import { MessageSquare, ChevronRight, Users, Reply, ThumbsUp, MessageCircle, Loader2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
-// Mock data
-const discussionData = {
-    recentPosts: [
-        {
-            id: "1",
-            title: "How to implement recursion in linked lists?",
-            author: "Sarah Wilson",
-            authorAvatar: "",
-            course: "Data Structures",
-            replies: 5,
-            likes: 3,
-            timeAgo: "2 hours ago"
-        },
-        {
-            id: "2",
-            title: "Best practices for responsive web design?",
-            author: "David Kim",
-            authorAvatar: "",
-            course: "Web Technology",
-            replies: 12,
-            likes: 8,
-            timeAgo: "Yesterday"
-        }
-    ],
-    unansweredQuestions: [
-        {
-            id: "3",
-            title: "Trouble with flexbox alignment",
-            author: "Raj Patel",
-            authorAvatar: "",
-            course: "Web Technology",
-            timeAgo: "3 hours ago"
-        }
-    ],
-    courseDiscussions: {
-        "Web Technology": 27,
-        "Data Structures": 15
-    }
-};
+import { useDiscussions } from "@/hooks/useDiscussions";
 
 const getInitials = (name: string): string => {
     return name && typeof name === 'string' 
@@ -51,12 +12,17 @@ const getInitials = (name: string): string => {
         : '';
 };
 
-const DiscussionHub = ({ data = discussionData }) => {
-    // Ensure data has all required properties with fallbacks for empty data
+const DiscussionHub = () => {
+    const { discussions, isLoading } = useDiscussions();
+
+    // Map the generic mock discussions to the component's required structure
     const safeData = {
-        recentPosts: Array.isArray(data?.recentPosts) ? data.recentPosts : [],
-        unansweredQuestions: Array.isArray(data?.unansweredQuestions) ? data.unansweredQuestions : [],
-        courseDiscussions: data?.courseDiscussions || {}
+        recentPosts: discussions || [],
+        unansweredQuestions: (discussions || []).filter((d: any) => d.replies === 0),
+        courseDiscussions: {
+            "Teknologi Web": 12, // Dummy static course stats
+            "Basis Data": 5
+        }
     };
 
     const hasRecentPosts = safeData.recentPosts.length > 0;
@@ -79,9 +45,13 @@ const DiscussionHub = ({ data = discussionData }) => {
                         <MessageCircle className="h-4 w-4 text-indigo-500" />
                         <span className="text-sm font-medium text-gray-600">Recent Discussions</span>
                     </div>
-                    {hasRecentPosts ? (
+                    {isLoading ? (
+                        <div className="py-4 flex justify-center text-gray-400">
+                            <Loader2 className="w-5 h-5 animate-spin text-indigo-500" />
+                        </div>
+                    ) : hasRecentPosts ? (
                         <div className="space-y-2">
-                            {safeData.recentPosts.map((post) => (
+                            {safeData.recentPosts.map((post: any) => (
                                 <div key={post.id} className="bg-gray-50 rounded-md border-l-4 border-indigo-400 py-2 px-3">
                                     <Link
                                         href={`/dashboard/home/discussions/${post.id}`}
@@ -106,11 +76,7 @@ const DiscussionHub = ({ data = discussionData }) => {
                                             <Reply className="h-3 w-3" />
                                             {post.replies || 0} replies
                                         </div>
-                                        <div className="flex items-center gap-1 text-xs text-gray-500">
-                                            <ThumbsUp className="h-3 w-3" />
-                                            {post.likes || 0} likes
-                                        </div>
-                                        <span className="text-xs text-gray-500">{post.course}</span>
+                                        <span className="text-xs text-gray-500">Global Forum</span>
                                     </div>
                                 </div>
                             ))}
@@ -128,9 +94,9 @@ const DiscussionHub = ({ data = discussionData }) => {
                         <Users className="h-4 w-4 text-indigo-500" />
                         <span className="text-sm font-medium text-gray-600">Unanswered Questions</span>
                     </div>
-                    {hasUnansweredQuestions ? (
+                    {isLoading ? null : hasUnansweredQuestions ? (
                         <div className="space-y-2">
-                            {safeData.unansweredQuestions.map((question) => (
+                            {safeData.unansweredQuestions.map((question: any) => (
                                 <div key={question.id} className="bg-gray-50 rounded-md border-l-4 border-amber-400 py-2 px-3">
                                     <Link
                                         href={`/dashboard/home/discussions/${question.id}`}
@@ -153,7 +119,7 @@ const DiscussionHub = ({ data = discussionData }) => {
                                     <div className="flex items-center gap-1 mt-2">
                                         <span className="text-xs text-amber-600 font-medium">Help needed</span>
                                         <span className="text-xs text-gray-400 mx-2">•</span>
-                                        <span className="text-xs text-gray-500">{question.course}</span>
+                                        <span className="text-xs text-gray-500">Global Forum</span>
                                     </div>
                                 </div>
                             ))}

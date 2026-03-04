@@ -8,6 +8,7 @@ import {
     DropdownMenuTrigger,
     DropdownMenuContent,
     DropdownMenuItem,
+    DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { extractInitials } from "@/lib/stringUtils";
 import Link from "next/link";
@@ -17,24 +18,22 @@ import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 import { removeAuthCookie } from "@/lib/auth";
-
+import { useAuth } from "@/context/AuthContext";
+import { Badge } from "@/components/ui/badge";
 
 export default function Navbar() {
     const pathname = usePathname();
     const router = useRouter();
+    const { user, logout } = useAuth();
     const [userInitials, setUserInitials] = useState("");
 
-    // Dummy user data
-    const user = {
-        name: "John Doe",
-        title: "Backend Developer",
-    };
-
     useEffect(() => {
-        setUserInitials(extractInitials(user.name));
-    }, [user.name]);
+        if (user?.name) {
+            setUserInitials(extractInitials(user.name));
+        }
+    }, [user?.name]);
 
     const navItems = [
         { label: "Home", href: "/dashboard/home" },
@@ -46,10 +45,13 @@ export default function Navbar() {
     ];
 
     const handleLogout = async () => {
-        const { removeAuthCookie } = await import("@/lib/auth");
+        logout();
         await removeAuthCookie();
         router.push("/login");
     };
+
+    const displayName = user?.name ?? "—";
+    const displayTitle = user?.title ?? (user?.role === "mahasiswa" ? "Mahasiswa" : user?.role === "dosen" ? "Dosen" : "");
 
     return (
         <nav className="w-full border-b bg-white">
@@ -69,24 +71,37 @@ export default function Navbar() {
                 </Link>
                 <div className="flex-1" />
                 <div className="flex items-center gap-4">
-                    <MessageSquare className="w-5 h-5 cursor-pointer text-gray-600" />
+                    <MessageSquare className="w-5 h-5 cursor-pointer text-gray-600 hover:text-indigo-600 transition-colors" />
                     <Popover>
-                        <PopoverTrigger><Bell className="w-5 h-5 cursor-pointer text-gray-600" /></PopoverTrigger>
-                        <PopoverContent className="mt-4">Notification will goes here later Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, enim.</PopoverContent>
+                        <PopoverTrigger>
+                            <div className="relative">
+                                <Bell className="w-5 h-5 cursor-pointer text-gray-600 hover:text-indigo-600 transition-colors" />
+                            </div>
+                        </PopoverTrigger>
+                        <PopoverContent className="mt-4 w-80 p-0" align="end">
+                            <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+                                <p className="text-sm font-semibold text-gray-900">Notifikasi</p>
+                                <Badge variant="secondary" className="text-xs">0 baru</Badge>
+                            </div>
+                            <div className="px-4 py-8 text-center">
+                                <Bell className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                                <p className="text-sm text-gray-500">Tidak ada notifikasi baru</p>
+                            </div>
+                        </PopoverContent>
                     </Popover>
 
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <div className="flex items-center gap-3 cursor-pointer">
                                 <Avatar className="border rounded-md w-9 h-9 text-sm">
-                                    <AvatarFallback className="bg-muted rounded-md text-muted-foreground">
+                                    <AvatarFallback className="bg-indigo-100 rounded-md text-indigo-700 font-medium">
                                         {userInitials}
                                     </AvatarFallback>
                                 </Avatar>
 
                                 <div className="flex flex-col items-start text-sm leading-tight">
-                                    <span className="font-medium">{user.name}</span>
-                                    <span className="text-xs text-gray-500">{user.title}</span>
+                                    <span className="font-medium">{displayName}</span>
+                                    <span className="text-xs text-gray-500">{displayTitle}</span>
                                 </div>
 
                                 <ChevronDown className="w-4 h-4 text-gray-500" />
@@ -95,19 +110,21 @@ export default function Navbar() {
 
                         <DropdownMenuContent align="end" className="w-48 mt-2">
                             <DropdownMenuItem onClick={() => router.push("/dashboard/home/profile")}>
-                                Profile
+                                Profil
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => router.push("/dashboard/home/settings")}>
-                                Settings
+                                Pengaturan
                             </DropdownMenuItem>
+                            <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => router.push("/dashboard/course-attendance")}>
-                                Check-in Attendance
+                                Check-in Kehadiran
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => router.push("/dashboard/attendance")}>
-                                Attendance
+                                Riwayat Kehadiran
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={handleLogout}>
-                                Logout
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:text-red-600">
+                                Keluar
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -118,7 +135,6 @@ export default function Navbar() {
             <div className="px-6 md:px-12 lg:px-24 overflow-x-auto no-scrollbar">
                 <div className="flex gap-6 min-w-max">
                     {navItems.map((item) => {
-                        // Support active states that match subpaths too, e.g., /resources/123
                         const isActive = pathname === item.href || (item.href !== "/dashboard/home" && pathname.startsWith(item.href));
                         return (
                             <Link

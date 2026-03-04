@@ -1,6 +1,6 @@
 "use client";
 
-import { Brain, ChevronRight, Clock, FolderGit2, AlertCircle } from "lucide-react";
+import { Brain, ChevronRight, Clock, FolderGit2, AlertCircle, Trophy } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import CourseActivitiesCard from "./components/course-activities-card";
@@ -8,17 +8,44 @@ import { Announcement } from "./components/announcement";
 import DiscussionHub from "./components/discussion-hub";
 import QuickActions from "./components/quick-actions";
 import UpcomingSchedule from "./components/upcoming-schedule";
+import LearningProgressSummary from "./components/learning-progress-summary";
+import SkillGraph from "./components/skill-graph";
+import Leaderboard from "./components/leaderboard";
+import { useAuth } from "@/context/AuthContext";
+
+const STATIC_LEADERBOARD = [
+  { id: "u1", name: "Ahmad Rizki",   points: 2840, rank: 1, change: "same" as const },
+  { id: "u2", name: "Budi Santoso",  points: 2615, rank: 2, change: "up"   as const },
+  { id: "u3", name: "Cindy Pratiwi", points: 2490, rank: 3, change: "down" as const },
+  { id: "u4", name: "Dewi Lestari",  points: 2310, rank: 4, change: "up"   as const },
+  { id: "u6", name: "Fajar Nugroho", points: 1950, rank: 6, change: "down" as const },
+];
 
 export default function Page() {
+    const { user } = useAuth();
+    const displayName = user?.name?.split(" ")[0] ?? "";
+
+    const leaderboardUsers = [
+        ...STATIC_LEADERBOARD,
+        { id: "me", name: user?.name ?? "Saya", points: 2180, rank: 5, change: "up" as const },
+    ].sort((a, b) => a.rank - b.rank);
+
+    const getGreeting = () => {
+        const hour = new Date().getHours();
+        if (hour < 12) return "Selamat pagi";
+        if (hour < 17) return "Selamat siang";
+        return "Selamat malam";
+    };
+
     return (
         <div className="py-6 px-6 md:py-8 md:px-12 lg:px-24 xl:px-24 space-y-6 md:space-y-8 bg-gray-50/50 min-h-screen">
             {/* Greeting & Stats Section */}
             <div className="flex flex-col xl:flex-row xl:items-start justify-between gap-6">
                 <div className="space-y-2 flex-1">
-                    <h1 className="font-bold text-3xl md:text-4xl text-gray-900 tracking-tight">Good morning, Adolf 👋</h1>
-                    <p className="text-gray-600 text-lg">Welcome back to SI Lab. Here is your learning overview for today.</p>
+                    <h1 className="font-bold text-3xl md:text-4xl text-gray-900 tracking-tight">{getGreeting()}, {displayName} 👋</h1>
+                    <p className="text-gray-600 text-lg">Selamat datang di SI Lab. Berikut ringkasan belajar Anda hari ini.</p>
                 </div>
-                
+                {/* Stats cards (commented out):
                 <div className="flex flex-wrap lg:flex-nowrap items-center gap-4">
                     <Card className="flex-1 min-w-[200px] hover:shadow-md transition-shadow duration-200">
                         <CardContent className="p-4 flex items-center gap-4">
@@ -56,6 +83,7 @@ export default function Page() {
                         </CardContent>
                     </Card>
                 </div>
+                */}
             </div>
 
             {/* Top Grid: Announcement & Actions & Schedule */}
@@ -105,6 +133,13 @@ export default function Page() {
                 <div className="w-full">
                     <DiscussionHub />
                 </div>
+            </div>
+
+            {/* Bottom Grid: Progress, Skills, Leaderboard */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <LearningProgressSummary />
+                <SkillGraph />
+                <Leaderboard users={leaderboardUsers} currentUserId="me" />
             </div>
         </div>
     );

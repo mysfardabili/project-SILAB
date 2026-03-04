@@ -43,8 +43,10 @@ const CourseActivitiesCard = ({ activities }: CourseActivitiesCardProps) => {
                     </div>
                 ))}
                 {activities.length === 0 && (
-                    <div className="py-4 text-center text-gray-500">
-                        No activities available yet.
+                    <div className="py-8 flex flex-col items-center justify-center text-center text-gray-400">
+                        <ClipboardList className="h-10 w-10 mb-3 opacity-20" />
+                        <p className="font-medium text-sm">Belum ada aktivitas kelas.</p>
+                        <p className="text-xs mt-1">Aktivitas baru akan muncul di sini.</p>
                     </div>
                 )}
             </div>

@@ -43,8 +43,12 @@ const MaterialListItem: FC<MaterialListItemProps> = ({
 
     const displayedTags = [...tags, priorityLabel].slice(0, 3);
 
+    const href = type === "course" 
+        ? `/dashboard/learnings/courses/${id}`
+        : `/dashboard/learnings/materials/${type}/${id}`;
+
     return (
-        <Link href={`/dashboard/learnings/materials/${type}/${id}`} >
+        <Link href={href} >
             <div className="flex flex-col md:flex-row items-start md:items-center gap-4 border border-gray-200 rounded-lg p-4 hover:shadow-md transition mb-4">
                 {imageUrl && (
                     <div className="relative w-full md:w-48 h-32 md:h-24 rounded-lg overflow-hidden">
